@@ -22,6 +22,13 @@ export interface Job {
   first_seen_at: string | null
   description: string | null
   companies: { name: string } | null
+  // aggregator jobs (indeed/linkedin/glassdoor) have no companies row;
+  // their company name lives in raw->company
+  raw_company: string | null
+}
+
+export function companyName(job: Job): string {
+  return job.companies?.name ?? job.raw_company ?? '—'
 }
 
 export interface JobFilterState {

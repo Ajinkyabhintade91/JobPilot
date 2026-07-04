@@ -5,7 +5,7 @@ import {
 import { useMediaQuery } from '@mantine/hooks'
 import { DataTable } from 'mantine-datatable'
 import dayjs from 'dayjs'
-import type { Job } from '../lib/types'
+import { companyName, type Job } from '../lib/types'
 import { StatusSelect } from './StatusSelect'
 import { TagEditor } from './TagEditor'
 
@@ -32,7 +32,7 @@ function JobDrawer({ job, onClose }: { job: Job | null; onClose: () => void }) {
         <Stack gap="sm">
           <Group gap="xs">
             <SourceBadge job={job} />
-            <Text size="sm" c="dimmed">{job.companies?.name ?? '—'}</Text>
+            <Text size="sm" c="dimmed">{companyName(job)}</Text>
             <Text size="sm" c="dimmed">{job.location}</Text>
           </Group>
           <Group>
@@ -67,7 +67,7 @@ export function JobList({ jobs, loading }: { jobs: Job[]; loading: boolean }) {
             <Card key={job.id} withBorder padding="sm" onClick={() => setSelected(job)}>
               <Text fw={600} size="sm" lineClamp={2}>{job.title}</Text>
               <Group gap="xs" mt={4}>
-                <Text size="xs" c="dimmed">{job.companies?.name ?? '—'}</Text>
+                <Text size="xs" c="dimmed">{companyName(job)}</Text>
                 <Text size="xs" c="dimmed">{job.location}</Text>
               </Group>
               <Group gap="xs" mt={6} justify="space-between">
@@ -100,7 +100,7 @@ export function JobList({ jobs, loading }: { jobs: Job[]; loading: boolean }) {
               <Text size="sm" fw={500} lineClamp={2}>{job.title}</Text>
             ),
           },
-          { accessor: 'company', render: (job) => job.companies?.name ?? '—', width: 160 },
+          { accessor: 'company', render: (job) => companyName(job), width: 160 },
           { accessor: 'location', width: 180, ellipsis: true },
           { accessor: 'source', render: (job) => <SourceBadge job={job} />, width: 150 },
           {
@@ -109,7 +109,8 @@ export function JobList({ jobs, loading }: { jobs: Job[]; loading: boolean }) {
             width: 100,
             render: (job) => (job.first_seen_at ? dayjs(job.first_seen_at).format('MMM D') : '—'),
           },
-          { accessor: 'match_score', title: 'Score', width: 70 },
+          // match_score column returns with Phase 2 scoring — an always-empty
+          // column reads as a bug
           {
             accessor: 'status',
             width: 160,
