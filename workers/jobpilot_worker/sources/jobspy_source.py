@@ -63,9 +63,9 @@ def poll_jobspy() -> dict:
             ).fetchone()
         queries = row[0] if row and row[0] else []
         run.stats.update(attempted=len(queries) or 1, inserted=0, updated=0)
+        # no early return here: run.result only exists after the block exits
         if not queries:
             run.add_error(error="user_profile_settings.search_queries is empty — nothing to search")
-            return run.result  # type: ignore[attr-defined]
 
         for query in queries:
             try:
