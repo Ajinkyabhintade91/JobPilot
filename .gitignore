@@ -20,3 +20,7 @@ volumes/storage/
 # editor
 .vscode/
 .idea/
+
+# personal documents - never commit
+*.docx
+*.pdf
