@@ -17,6 +17,7 @@ export function useJobs(filters: JobFilterState) {
       let q = supabase
         .from('jobs')
         .select('id,title,url,source,location,remote_type,match_score,status,tags,manual_apply_only,is_ghost_suspect,duplicate_of,posted_at,first_seen_at,description,raw_company:raw->>company,companies(name)')
+        .order('match_score', { ascending: false, nullsFirst: false })
         .order('first_seen_at', { ascending: false })
         .limit(500)
       if (filters.hideDuplicates) q = q.is('duplicate_of', null)

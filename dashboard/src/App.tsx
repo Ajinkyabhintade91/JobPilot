@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { AppShell, Button, Container, Group, Stack, Text, Title } from '@mantine/core'
 import { Login } from './auth/Login'
+import { ProfileUpload } from './profile/ProfileUpload'
 import { JobFilters } from './jobs/JobFilters'
 import { JobList } from './jobs/JobList'
 import { useJobs } from './hooks/useJobs'
@@ -48,9 +49,12 @@ export default function App() {
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
           <Title order={4}>JobPilot</Title>
-          <Button size="xs" variant="subtle" onClick={() => supabase.auth.signOut()}>
-            Sign out
-          </Button>
+          <Group gap="xs">
+            <ProfileUpload />
+            <Button size="xs" variant="subtle" onClick={() => supabase.auth.signOut()}>
+              Sign out
+            </Button>
+          </Group>
         </Group>
       </AppShell.Header>
       <AppShell.Main>

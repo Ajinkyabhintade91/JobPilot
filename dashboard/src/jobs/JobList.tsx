@@ -9,6 +9,12 @@ import { companyName, type Job } from '../lib/types'
 import { StatusSelect } from './StatusSelect'
 import { TagEditor } from './TagEditor'
 
+function ScoreBadge({ score }: { score: number | null }) {
+  if (score === null) return <Text size="xs" c="dimmed">—</Text>
+  const color = score >= 70 ? 'green' : score >= 50 ? 'yellow' : 'gray'
+  return <Badge size="sm" color={color} variant="light">{score}</Badge>
+}
+
 function SourceBadge({ job }: { job: Job }) {
   return (
     <Group gap={4}>
@@ -31,6 +37,7 @@ function JobDrawer({ job, onClose }: { job: Job | null; onClose: () => void }) {
       {job && (
         <Stack gap="sm">
           <Group gap="xs">
+            <ScoreBadge score={job.match_score} />
             <SourceBadge job={job} />
             <Text size="sm" c="dimmed">{companyName(job)}</Text>
             <Text size="sm" c="dimmed">{job.location}</Text>
@@ -71,7 +78,10 @@ export function JobList({ jobs, loading }: { jobs: Job[]; loading: boolean }) {
                 <Text size="xs" c="dimmed">{job.location}</Text>
               </Group>
               <Group gap="xs" mt={6} justify="space-between">
-                <SourceBadge job={job} />
+                <Group gap={4}>
+                  <ScoreBadge score={job.match_score} />
+                  <SourceBadge job={job} />
+                </Group>
                 <Badge size="xs" variant="outline">{job.status}</Badge>
               </Group>
             </Card>
@@ -109,8 +119,12 @@ export function JobList({ jobs, loading }: { jobs: Job[]; loading: boolean }) {
             width: 100,
             render: (job) => (job.first_seen_at ? dayjs(job.first_seen_at).format('MMM D') : '—'),
           },
-          // match_score column returns with Phase 2 scoring — an always-empty
-          // column reads as a bug
+          {
+            accessor: 'match_score',
+            title: 'Score',
+            width: 80,
+            render: (job) => <ScoreBadge score={job.match_score} />,
+          },
           {
             accessor: 'status',
             width: 160,

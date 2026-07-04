@@ -77,13 +77,36 @@
     },
     {
       "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WORKER_URL }}/tasks/embed-jobs",
+        "options": { "timeout": 2700000 }
+      },
+      "name": "Embed jobs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1400, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WORKER_URL }}/tasks/score-jobs",
+        "options": { "timeout": 1800000 }
+      },
+      "name": "Score jobs (non-fatal)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1600, 0],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
         "url": "={{ $env.HC_PING_URL }}",
         "options": { "timeout": 15000 }
       },
       "name": "HC success",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1400, 0],
+      "position": [1800, 0],
       "onError": "continueRegularOutput"
     },
     {
@@ -98,7 +121,7 @@
       "name": "Telegram digest",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1400, 160],
+      "position": [1800, 160],
       "onError": "continueRegularOutput"
     }
   ],
@@ -109,7 +132,9 @@
     "Job Bank RSS": { "main": [[{ "node": "Breathe", "type": "main", "index": 0 }]] },
     "Breathe": { "main": [[{ "node": "JobSpy (non-fatal)", "type": "main", "index": 0 }]] },
     "JobSpy (non-fatal)": { "main": [[{ "node": "Dedup", "type": "main", "index": 0 }]] },
-    "Dedup": { "main": [[{ "node": "HC success", "type": "main", "index": 0 }]] },
+    "Dedup": { "main": [[{ "node": "Embed jobs", "type": "main", "index": 0 }]] },
+    "Embed jobs": { "main": [[{ "node": "Score jobs (non-fatal)", "type": "main", "index": 0 }]] },
+    "Score jobs (non-fatal)": { "main": [[{ "node": "HC success", "type": "main", "index": 0 }]] },
     "HC success": { "main": [[{ "node": "Telegram digest", "type": "main", "index": 0 }]] }
   },
   "settings": { "executionOrder": "v1" }
