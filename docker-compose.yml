@@ -10,7 +10,7 @@ services:
     image: ollama/ollama:latest
     restart: unless-stopped
     ports:
-      - "11434:11434"
+      - "127.0.0.1:11434:11434"
     volumes:
       - ollama-data:/root/.ollama
     environment:
@@ -25,7 +25,7 @@ services:
     depends_on:
       - ollama
     ports:
-      - "4000:4000"
+      - "127.0.0.1:4000:4000"
     volumes:
       - ./litellm/config.yaml:/app/config.yaml:ro
     environment:
@@ -61,7 +61,7 @@ services:
       langfuse-db:
         condition: service_healthy
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     environment:
       DATABASE_URL: postgresql://langfuse:${LANGFUSE_DB_PASSWORD}@langfuse-db:5432/langfuse
       NEXTAUTH_URL: http://localhost:3000
@@ -74,7 +74,7 @@ services:
     image: n8nio/n8n:latest
     restart: unless-stopped
     ports:
-      - "5678:5678"
+      - "127.0.0.1:5678:5678"
     volumes:
       - n8n-data:/home/node/.n8n
     environment:
@@ -94,7 +94,9 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "8080:8080"
+      # unauthenticated task/notify API - loopback only; N8N reaches it
+      # on the compose network as worker:8080
+      - "127.0.0.1:8080:8080"
     environment:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}
       JOBPILOT_USER_ID: ${JOBPILOT_USER_ID}

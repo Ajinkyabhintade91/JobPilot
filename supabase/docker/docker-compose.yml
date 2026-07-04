@@ -419,9 +419,9 @@ services:
     # To upgrade an existing Postgres 15 database in place, see utils/upgrade-pg17.sh.
     image: supabase/postgres:17.6.1.136
     restart: unless-stopped
-    # JobPilot trim: supavisor removed; expose Postgres directly
+    # JobPilot trim: supavisor removed; expose Postgres directly (loopback only)
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - 127.0.0.1:${POSTGRES_PORT}:${POSTGRES_PORT}
     volumes:
       - ./volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger
