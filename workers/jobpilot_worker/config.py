@@ -14,10 +14,8 @@ class Settings(BaseSettings):
     # storage access (CV download) - service key stays server-side only
     supabase_url: str = "http://kong:8000"
     service_role_key: str = ""
-    # polite crawling
-    user_agent: str = (
-        "JobPilot/0.1 (personal job search; contact: ajinkyabhintade91@gmail.com)"
-    )
+    # polite crawling — set USER_AGENT in .env to add a contact address
+    user_agent: str = "JobPilot/0.1 (personal job search)"
     request_timeout_s: float = 20.0
     inter_company_delay_s: float = 0.75
 

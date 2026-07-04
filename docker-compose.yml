@@ -108,6 +108,7 @@ services:
       # storage access for CV download (server-side only, never in browser)
       SUPABASE_URL: http://kong:8000
       SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      USER_AGENT: ${USER_AGENT:-JobPilot/0.1 (personal job search)}
 
 volumes:
   ollama-data:
