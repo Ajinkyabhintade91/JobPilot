@@ -1,0 +1,32 @@
+# LiteLLM router — pipeline steps declare a TIER (model group), never a model.
+# Swap models here without touching code.
+model_list:
+  # ---- cheap tier: extraction, tagging, classification ----
+  - model_name: cheap
+    litellm_params:
+      model: ollama/qwen2.5:3b-instruct
+      api_base: http://ollama:11434
+  # GPU upgrade path: replace the above with ollama/qwen2.5:14b-instruct-q4_K_M
+
+  # ---- embeddings tier: match scoring, vault question matching ----
+  # bge-m3 is 1024-dim, matching vector(1024) in the schema. Do NOT swap in a
+  # model with different dimensions (e.g. nomic-embed-text is 768) without a
+  # schema migration — the worker /health endpoint asserts the dimension.
+  - model_name: embeddings
+    litellm_params:
+      model: ollama/bge-m3
+      api_base: http://ollama:11434
+
+  # ---- strong tier: CV tailoring, screening answers, outreach (Phase 3+) ----
+  - model_name: strong
+    litellm_params:
+      model: anthropic/claude-sonnet-5
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+litellm_settings:
+  success_callback: ["langfuse"]
+  failure_callback: ["langfuse"]
+  drop_params: true
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
