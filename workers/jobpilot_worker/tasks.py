@@ -4,6 +4,7 @@ from .api import TASKS
 from .dedup.resolve import run_dedup
 from .profile import extract_profile
 from .runs import pipeline_run
+from .scoring import embed_jobs, score_jobs
 from .sources.ats import poll_ats
 from .sources.jobbank import poll_jobbank
 
@@ -27,3 +28,5 @@ TASKS["jobbank"] = poll_jobbank
 TASKS["jobspy"] = _poll_jobspy
 TASKS["dedup"] = run_dedup
 TASKS["extract-profile"] = extract_profile
+TASKS["embed-jobs"] = embed_jobs
+TASKS["score-jobs"] = score_jobs
