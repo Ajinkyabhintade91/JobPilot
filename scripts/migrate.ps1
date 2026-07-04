@@ -24,7 +24,9 @@ Get-ChildItem .\supabase\migrations\*.sql | Sort-Object Name | ForEach-Object {
         return
     }
     Write-Output "apply  $name"
-    Get-Content $_.FullName -Raw | docker compose exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 -v "jobpilot_user_id=$userId"
+    # -1 = single transaction: a mid-file failure rolls the whole migration
+    # back, so it can be fixed and rerun instead of leaving partial schema
+    Get-Content $_.FullName -Raw | docker compose exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -v "jobpilot_user_id=$userId"
     if ($LASTEXITCODE -ne 0) { throw "migration $name failed" }
     Invoke-Psql "INSERT INTO public.schema_migrations (filename) VALUES ('$name');" | Out-Null
 }
