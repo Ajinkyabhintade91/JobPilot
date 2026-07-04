@@ -15,7 +15,7 @@ except the crawls themselves and optional Telegram notifications.
 |---|---|---|
 | **0 — Foundations** | Docker stack, Supabase (self-hosted), schema + RLS, LLM routing, notifications | ✅ Built & verified |
 | **1 — Sourcing + dashboard** | Nightly crawl (ATS APIs, Indeed/LinkedIn, Job Bank RSS), 2-layer dedup, browse/tag dashboard | ✅ Built & verified (soak test pending) |
-| **2 — Profile + scoring** | CV upload → structured profile → embedding match score per job | 🔨 Next |
+| **2 — Profile + scoring** | CV upload → structured profile → embedding match score per job | ✅ Machinery built & E2E-verified — upload your CV, then run `extract-profile` + `score-jobs` |
 | 3 — Tailoring | Truthful CV/cover-letter tailoring via LLM | Planned |
 | 4 — Approval + submission | Swipe-approval queue, controlled auto-submit with proof | Planned |
 | 5+ — Tracking, outreach, analytics | Gmail classification, contact drafts, closed-loop metrics | Planned |
@@ -42,8 +42,12 @@ Three independent pipelines feed the `jobs` table every night at 01:00:
 3. **Job Bank RSS (optional)** — RSS URLs from jobbank.gc.ca searches, stored
    in `user_profile_settings.jobbank_rss_urls`.
 
-Note: until Phase 2 lands, jobs are **not** filtered or ranked by your CV —
-the dashboard shows raw crawled inventory from the sources above.
+**Scoring (Phase 2):** upload a CV (dashboard → *Upload CV*, or
+`cli extract-profile <path>`), and every open job gets a `match_score` 0–100:
+embedding similarity between your profile and the job (weight .65), title
+keyword fit against your `search_queries` (.20), and posting recency (.15).
+The dashboard orders by score. Until a CV is uploaded, jobs are unscored raw
+inventory.
 
 **Dedup** happens in two layers:
 - *Layer 1 (exact):* canonical URL (tracking params stripped) → SHA-256
