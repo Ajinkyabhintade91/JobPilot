@@ -1,0 +1,22 @@
+# secrets
+.env
+dashboard/.env.local
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# node
+node_modules/
+dist/
+
+# docker volumes / runtime data (everything lives in named volumes, but just in case)
+volumes/db/data/
+volumes/storage/
+
+# editor
+.vscode/
+.idea/
