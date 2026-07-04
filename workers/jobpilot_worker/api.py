@@ -52,6 +52,18 @@ def notify_test() -> dict:
     return result
 
 
+@app.post("/notify/send")
+def notify_send(body: dict) -> dict:
+    """Generic Telegram send — N8N posts {"text": "..."} here."""
+    text = (body or {}).get("text", "").strip()
+    if not text:
+        raise HTTPException(status_code=422, detail="body must include non-empty 'text'")
+    result = notify.send_telegram(text)
+    if not result.get("ok"):
+        raise HTTPException(status_code=502, detail=result)
+    return result
+
+
 TASKS: dict[str, object] = {}
 # Phase 1 tasks (poll-ats, jobspy, jobbank, dedup) register themselves here
 # via jobpilot_worker.tasks — imported at the bottom to avoid circular imports.

@@ -27,7 +27,7 @@ try {
 } catch {
     $err = $_.ErrorDetails.Message
     if ($err -match 'already been registered|already exists|duplicate') {
-        Write-Output "Auth user already exists — OK"
+        Write-Output "Auth user already exists - OK"
     } else {
         throw
     }

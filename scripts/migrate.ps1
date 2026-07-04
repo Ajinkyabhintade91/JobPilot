@@ -6,7 +6,7 @@ Set-Location $repo
 
 # read JOBPILOT_USER_ID from .env
 $userId = (Select-String -Path .\.env -Pattern '^JOBPILOT_USER_ID=(.+)$').Matches[0].Groups[1].Value.Trim()
-if (-not $userId) { throw "JOBPILOT_USER_ID missing from .env — run scripts/generate-keys.ps1 first" }
+if (-not $userId) { throw "JOBPILOT_USER_ID missing from .env - run scripts/generate-keys.ps1 first" }
 
 function Invoke-Psql([string]$sql) {
     $sql | docker compose exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 -q -t -A

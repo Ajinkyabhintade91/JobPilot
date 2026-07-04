@@ -1,0 +1,51 @@
+name,ats_type,ats_slug,website,hq_city,verified_at,notes
+Wealthsimple,ashby,wealthsimple,wealthsimple.com,Toronto,2026-07-04,"ambiguous: also [('lever', 'wealthsimple')]"
+1Password,ashby,1password,1password.com,Toronto,2026-07-04,62 jobs at probe time
+Benevity,ashby,benevity,benevity.com,Calgary,2026-07-04,22 jobs at probe time
+Faire,greenhouse,faire,faire.com,Kitchener,2026-07-04,79 jobs at probe time
+Jane App,ashby,jane,janeapp.com,North Vancouver,2026-07-04,20 jobs at probe time
+Hootsuite,greenhouse,hootsuite,hootsuite.com,Vancouver,2026-07-04,13 jobs at probe time
+Koho,ashby,koho,koho.ca,Toronto,2026-07-04,15 jobs at probe time
+Neo Financial,ashby,neofinancial,neofinancial.com,Calgary,2026-07-04,130 jobs at probe time
+Cohere,ashby,cohere,cohere.com,Toronto,2026-07-04,127 jobs at probe time
+Top Hat,ashby,top-hat,tophat.com,Toronto,2026-07-04,3 jobs at probe time
+Thinkific,ashby,thinkific,thinkific.com,Vancouver,2026-07-04,"ambiguous: also [('greenhouse', 'thinkific')]"
+Later,greenhouse,later,later.com,Vancouver,2026-07-04,68 jobs at probe time
+Klue,ashby,klue,klue.com,Vancouver,2026-07-04,8 jobs at probe time
+Visier,ashby,visier,visier.com,Vancouver,2026-07-04,0 jobs at probe time
+Trulioo,ashby,trulioo,trulioo.com,Vancouver,2026-07-04,28 jobs at probe time
+Certn,ashby,certn,certn.co,Victoria,2026-07-04,1 jobs at probe time
+Float,ashby,float,floatfinancial.com,Toronto,2026-07-04,11 jobs at probe time
+Tucows,greenhouse,tucows,tucows.com,Toronto,2026-07-04,12 jobs at probe time
+Geotab,greenhouse,geotab,geotab.com,Oakville,2026-07-04,92 jobs at probe time
+Miovision,ashby,miovision,miovision.com,Kitchener,2026-07-04,6 jobs at probe time
+Ritual,greenhouse,ritual,ritual.co,Toronto,2026-07-04,15 jobs at probe time
+Instacart,greenhouse,instacart,instacart.com,Toronto,2026-07-04,156 jobs at probe time
+AlayaCare,greenhouse,alayacare,alayacare.com,Montreal,2026-07-04,22 jobs at probe time
+Prodigy Education,ashby,prodigy-education,prodigygame.com,Oakville,2026-07-04,0 jobs at probe time
+Achievers,lever,achievers,achievers.com,Toronto,2026-07-04,24 jobs at probe time
+Uberflip,lever,uberflip,uberflip.com,Toronto,2026-07-04,0 jobs at probe time
+TouchBistro,greenhouse,touchbistro,touchbistro.com,Toronto,2026-07-04,2 jobs at probe time
+D2L,greenhouse,d2l,d2l.com,Kitchener,2026-07-04,"ambiguous: also [('lever', 'd2l')]"
+Magnet Forensics,lever,magnetforensics,magnetforensics.com,Waterloo,2026-07-04,48 jobs at probe time
+Jobber,ashby,jobber,getjobber.com,Edmonton,2026-07-04,47 jobs at probe time
+Unbounce,greenhouse,unbounce,unbounce.com,Vancouver,2026-07-04,0 jobs at probe time
+Procurify,ashby,procurify,procurify.com,Vancouver,2026-07-04,10 jobs at probe time
+Jane Software,ashby,jane,janeapp.com,North Vancouver,2026-07-04,20 jobs at probe time
+Enable,lever,enable,enable.com,Toronto,2026-07-04,7 jobs at probe time
+Loopio,ashby,loopio,loopio.com,Toronto,2026-07-04,6 jobs at probe time
+Fellow,greenhouse,fellow,fellow.app,Ottawa,2026-07-04,"ambiguous: also [('ashby', 'fellow')]"
+Rewind,ashby,rewind,rewind.com,Ottawa,2026-07-04,2 jobs at probe time
+Solink,ashby,solink,solink.com,Ottawa,2026-07-04,24 jobs at probe time
+Fullscript,lever,fullscript,fullscript.com,Ottawa,2026-07-04,21 jobs at probe time
+Knak,greenhouse,knak,knak.com,Ottawa,2026-07-04,4 jobs at probe time
+Noibu,ashby,noibu,noibu.com,Ottawa,2026-07-04,7 jobs at probe time
+Hopper,ashby,hopper,hopper.com,Montreal,2026-07-04,126 jobs at probe time
+Automat,ashby,automat,automat.ai,Montreal,2026-07-04,6 jobs at probe time
+Plusgrade,lever,plusgrade,plusgrade.com,Montreal,2026-07-04,10 jobs at probe time
+Workleap,greenhouse,workleap,workleap.com,Montreal,2026-07-04,16 jobs at probe time
+Poka,greenhouse,poka,poka.io,Quebec City,2026-07-04,4 jobs at probe time
+Mistplay,lever,mistplay,mistplay.com,Montreal,2026-07-04,8 jobs at probe time
+Gradient AI,greenhouse,gradientai,gradient.ai,Toronto,2026-07-04,4 jobs at probe time
+Tenstorrent,greenhouse,tenstorrent,tenstorrent.com,Toronto,2026-07-04,123 jobs at probe time
+Waabi,lever,waabi,waabi.ai,Toronto,2026-07-04,60 jobs at probe time

@@ -26,5 +26,19 @@ def notify_test() -> None:
     typer.echo(json.dumps(notify.send_telegram("JobPilot CLI test ✅"), indent=2))
 
 
+@app.command()
+def probe_ats(candidates_csv: str, out_csv: str) -> None:
+    from .registry.probe import probe_companies
+
+    typer.echo(json.dumps(probe_companies(candidates_csv, out_csv), indent=2))
+
+
+@app.command()
+def load_companies(csv_path: str) -> None:
+    from .registry.loader import load_companies as _load
+
+    typer.echo(json.dumps(_load(csv_path), indent=2))
+
+
 if __name__ == "__main__":
     app()

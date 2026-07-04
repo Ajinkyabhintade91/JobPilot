@@ -82,6 +82,9 @@ services:
       GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-America/Toronto}
       TZ: ${GENERIC_TIMEZONE:-America/Toronto}
       N8N_DIAGNOSTICS_ENABLED: "false"
+      # consumed by workflows via {{ $env.* }}
+      HC_PING_URL: ${HC_PING_URL:-}
+      WORKER_URL: http://worker:8080
 
   worker:
     container_name: jobpilot-worker

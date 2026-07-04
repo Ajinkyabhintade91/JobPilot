@@ -1,0 +1,43 @@
+{
+  "name": "error_handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.HC_PING_URL }}/fail",
+        "options": { "timeout": 15000 }
+      },
+      "name": "HC fail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [200, 0],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WORKER_URL }}/notify/send",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: '🚨 JobPilot workflow failed: ' + $json.workflow.name + '\\nError: ' + ($json.execution?.error?.message || 'unknown') }) }}",
+        "options": { "timeout": 30000 }
+      },
+      "name": "Telegram alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 0],
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Error Trigger": { "main": [[{ "node": "HC fail", "type": "main", "index": 0 }]] },
+    "HC fail": { "main": [[{ "node": "Telegram alert", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

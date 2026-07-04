@@ -1,8 +1,10 @@
 """Task registry: maps task names to callables returning the finished
-pipeline_runs row. Phase 1 fills these in; Phase 0 ships the registry empty
-plus a trivial smoke task used to prove the pipeline_runs plumbing."""
+pipeline_runs row (N8N branches on its "status")."""
 from .api import TASKS
+from .dedup.resolve import run_dedup
 from .runs import pipeline_run
+from .sources.ats import poll_ats
+from .sources.jobbank import poll_jobbank
 
 
 def smoke() -> dict:
@@ -11,4 +13,15 @@ def smoke() -> dict:
     return run.result  # type: ignore[attr-defined]
 
 
+def _poll_jobspy() -> dict:
+    # lazy import: jobspy pulls pandas; don't pay that on worker startup
+    from .sources.jobspy_source import poll_jobspy
+
+    return poll_jobspy()
+
+
 TASKS["smoke"] = smoke
+TASKS["poll-ats"] = poll_ats
+TASKS["jobbank"] = poll_jobbank
+TASKS["jobspy"] = _poll_jobspy
+TASKS["dedup"] = run_dedup

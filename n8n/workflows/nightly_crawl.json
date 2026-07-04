@@ -1,0 +1,116 @@
+{
+  "name": "nightly_crawl",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "cronExpression", "expression": "0 1 * * *" }]
+        }
+      },
+      "name": "Nightly 01:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.HC_PING_URL }}/start",
+        "options": { "timeout": 15000 }
+      },
+      "name": "HC start",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [200, 0],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WORKER_URL }}/tasks/poll-ats",
+        "options": { "timeout": 2700000 }
+      },
+      "name": "Poll ATS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WORKER_URL }}/tasks/jobbank",
+        "options": { "timeout": 1800000 }
+      },
+      "name": "Job Bank RSS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [600, 0]
+    },
+    {
+      "parameters": { "amount": 5, "unit": "minutes" },
+      "name": "Breathe",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [800, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WORKER_URL }}/tasks/jobspy",
+        "options": { "timeout": 2700000 }
+      },
+      "name": "JobSpy (non-fatal)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 0],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WORKER_URL }}/tasks/dedup",
+        "options": { "timeout": 1800000 }
+      },
+      "name": "Dedup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1200, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.HC_PING_URL }}",
+        "options": { "timeout": 15000 }
+      },
+      "name": "HC success",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1400, 0],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WORKER_URL }}/notify/send",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: 'JobPilot crawl done ✅\\nDuplicates marked: ' + $json.stats.duplicates_marked + ' (' + $json.stats.duplicates_pct + '%)\\nManual-apply flagged: ' + $json.stats.manual_apply_flagged + '\\nScanned: ' + $json.stats.attempted }) }}",
+        "options": { "timeout": 30000 }
+      },
+      "name": "Telegram digest",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1400, 160],
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Nightly 01:00": { "main": [[{ "node": "HC start", "type": "main", "index": 0 }]] },
+    "HC start": { "main": [[{ "node": "Poll ATS", "type": "main", "index": 0 }]] },
+    "Poll ATS": { "main": [[{ "node": "Job Bank RSS", "type": "main", "index": 0 }]] },
+    "Job Bank RSS": { "main": [[{ "node": "Breathe", "type": "main", "index": 0 }]] },
+    "Breathe": { "main": [[{ "node": "JobSpy (non-fatal)", "type": "main", "index": 0 }]] },
+    "JobSpy (non-fatal)": { "main": [[{ "node": "Dedup", "type": "main", "index": 0 }]] },
+    "Dedup": { "main": [[{ "node": "HC success", "type": "main", "index": 0 }]] },
+    "HC success": { "main": [[{ "node": "Telegram digest", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

@@ -12,6 +12,9 @@ dependencies = [
     "typer>=0.15",
     "tenacity>=9.0",
     "selectolax>=0.3",
+    "rapidfuzz>=3.10",
+    "feedparser>=6.0",
+    "python-jobspy>=1.1",
 ]
 
 [dependency-groups]
