@@ -92,7 +92,7 @@
         "url": "={{ $env.WORKER_URL }}/notify/send",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ text: 'JobPilot crawl done ✅\\nDuplicates marked: ' + $json.stats.duplicates_marked + ' (' + $json.stats.duplicates_pct + '%)\\nManual-apply flagged: ' + $json.stats.manual_apply_flagged + '\\nScanned: ' + $json.stats.attempted }) }}",
+        "jsonBody": "={{ JSON.stringify({ text: 'JobPilot crawl done ✅\\nDuplicates marked: ' + $('Dedup').item.json.stats.duplicates_marked + ' (' + $('Dedup').item.json.stats.duplicates_pct + '%)\\nManual-apply flagged: ' + $('Dedup').item.json.stats.manual_apply_flagged + '\\nScanned: ' + $('Dedup').item.json.stats.attempted }) }}",
         "options": { "timeout": 30000 }
       },
       "name": "Telegram digest",

@@ -25,7 +25,7 @@
         "url": "={{ $env.WORKER_URL }}/notify/send",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ text: '🚨 JobPilot workflow failed: ' + $json.workflow.name + '\\nError: ' + ($json.execution?.error?.message || 'unknown') }) }}",
+        "jsonBody": "={{ JSON.stringify({ text: '🚨 JobPilot workflow failed: ' + $('Error Trigger').item.json.workflow.name + '\\nError: ' + ($('Error Trigger').item.json.execution?.error?.message || 'unknown') }) }}",
         "options": { "timeout": 30000 }
       },
       "name": "Telegram alert",
