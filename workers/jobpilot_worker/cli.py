@@ -34,6 +34,13 @@ def probe_ats(candidates_csv: str, out_csv: str) -> None:
 
 
 @app.command()
+def extract_profile(cv_path: str = typer.Argument(None, help="Local CV file; omit to use the uploaded master CV")) -> None:
+    from .profile import extract_profile as _extract
+
+    typer.echo(json.dumps(_extract(cv_path), indent=2, default=str))
+
+
+@app.command()
 def load_companies(csv_path: str) -> None:
     from .registry.loader import load_companies as _load
 

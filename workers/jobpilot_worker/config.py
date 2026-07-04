@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     litellm_base_url: str = "http://litellm:4000"
     litellm_master_key: str = ""
     embedding_dim: int = 1024
+    # storage access (CV download) - service key stays server-side only
+    supabase_url: str = "http://kong:8000"
+    service_role_key: str = ""
     # polite crawling
     user_agent: str = (
         "JobPilot/0.1 (personal job search; contact: ajinkyabhintade91@gmail.com)"

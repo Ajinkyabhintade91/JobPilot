@@ -105,6 +105,9 @@ services:
       LITELLM_BASE_URL: http://litellm:4000
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
       EMBEDDING_DIM: ${EMBEDDING_DIM:-1024}
+      # storage access for CV download (server-side only, never in browser)
+      SUPABASE_URL: http://kong:8000
+      SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
 
 volumes:
   ollama-data:

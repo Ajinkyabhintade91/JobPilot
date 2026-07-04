@@ -2,6 +2,7 @@
 pipeline_runs row (N8N branches on its "status")."""
 from .api import TASKS
 from .dedup.resolve import run_dedup
+from .profile import extract_profile
 from .runs import pipeline_run
 from .sources.ats import poll_ats
 from .sources.jobbank import poll_jobbank
@@ -25,3 +26,4 @@ TASKS["poll-ats"] = poll_ats
 TASKS["jobbank"] = poll_jobbank
 TASKS["jobspy"] = _poll_jobspy
 TASKS["dedup"] = run_dedup
+TASKS["extract-profile"] = extract_profile
