@@ -5,6 +5,8 @@ token_set_ratio >= 90 (plus a seniority guard), and resolves winners by
 source priority: ATS APIs are source-of-truth, aggregators point at them
 via duplicate_of. Aggregator-only rows become manual_apply_only.
 """
+import re
+
 from rapidfuzz import fuzz
 
 from ..db import pool
@@ -21,13 +23,20 @@ TITLE_THRESHOLD = 90
 COMPANY_THRESHOLD = 95
 
 
+_LEVEL = re.compile(r"\b([1-4])\b")
+_CA = re.compile(r"\b(canada|ontario|quebec|alberta|british columbia)\b", re.IGNORECASE)
+_US = re.compile(r"\b(united states|usa|u\.s\.)\b", re.IGNORECASE)
+
+
 def _guard_mismatch(title_a: str, title_b: str) -> bool:
-    """token_set_ratio is dangerously generous: 'Software Engineer' vs
-    'Software Engineering Manager' scores high. Reject when exactly one side
-    carries a seniority/track marker the other lacks."""
+    """Fuzzy ratios are generous: 'Software Engineer' vs 'Software Engineering
+    Manager' scores high. Reject when the two sides carry different
+    seniority/track markers or different numeric levels (I/II/III)."""
     a = {m.lower() for m in SENIORITY_GUARD.findall(title_a)}
     b = {m.lower() for m in SENIORITY_GUARD.findall(title_b)}
-    return a != b
+    if a != b:
+        return True
+    return set(_LEVEL.findall(title_a)) != set(_LEVEL.findall(title_b))
 
 
 def titles_match(title_a: str, title_b: str) -> bool:
@@ -36,11 +45,19 @@ def titles_match(title_a: str, title_b: str) -> bool:
         return False
     if _guard_mismatch(na, nb):
         return False
-    return fuzz.token_set_ratio(na, nb) >= TITLE_THRESHOLD
+    # token_sort (not token_set): set-logic scores subset titles like
+    # "AI Solutions Architect" vs "Senior Solutions Architect" at ~100
+    return fuzz.token_sort_ratio(na, nb) >= TITLE_THRESHOLD
 
 
 def locations_compatible(loc_a: str, remote_a: bool, loc_b: str, remote_b: bool) -> bool:
     if remote_a or remote_b:
+        # remote-vs-remote still differs by country: "US - Remote" is not
+        # the same posting as "Canada - Remote"
+        a_ca, a_us = bool(_CA.search(loc_a or "")), bool(_US.search(loc_a or ""))
+        b_ca, b_us = bool(_CA.search(loc_b or "")), bool(_US.search(loc_b or ""))
+        if (a_ca and b_us and not b_ca) or (a_us and b_ca and not a_ca):
+            return False
         return True
     ca, cb = norm_city(loc_a), norm_city(loc_b)
     return not ca or not cb or ca == cb
@@ -90,6 +107,10 @@ def run_dedup() -> dict:
                     if k in claimed:
                         continue
                     cand = block[k]
+                    # same-source pairs are distinct openings (multiple
+                    # headcount); Layer-1 url_hash already caught true dupes
+                    if cand["source"] == winner["source"]:
+                        continue
                     if not titles_match(winner["title"] or "", cand["title"] or ""):
                         continue
                     if not locations_compatible(

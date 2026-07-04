@@ -34,6 +34,10 @@ TITLE_PAIRS = [
     ("VP Engineering", "Software Engineer", False),
     ("Full Stack Developer", "Principal Full Stack Developer", False),
     ("iOS Developer", "Android Developer", False),
+    # --- regressions from first live crawl (2026-07-04) ---
+    ("Senior Data Scientist (I & II)", "Senior People Data Scientist", False),
+    ("Customer Success Manager II", "Customer Success Manager I", False),
+    ("AI Solutions Architect", "Senior Solutions Architect II", False),
 ]
 
 LOCATION_CASES = [
@@ -43,6 +47,9 @@ LOCATION_CASES = [
     ("Toronto, ON", False, "Remote - Canada", True, True),
     ("", False, "Montreal, QC", False, True),          # missing location never blocks
     ("Montréal, QC", False, "Montréal", False, True),
+    # remote in different countries is a different posting (live-crawl regression)
+    ("United States - Remote", True, "Canada - Remote (ON, AB, BC, or NS Only)", True, False),
+    ("Remote - Canada", True, "Canada - Remote", True, True),
 ]
 
 
