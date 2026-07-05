@@ -67,6 +67,16 @@ Data flow (nightly 01:00): poll-ats → jobbank → jobspy → dedup → embed-j
 - Scripts target Windows PowerShell 5.1: no `&&`/`||`, and em-dashes in BOM-less `.ps1` files break parsing. Embedded double-quotes in here-string args to native exes get mangled.
 - Python tooling is `uv` (pinned python 3.12 via `workers/.python-version`); don't use pip/venv directly.
 
-### Dashboard design system
+### Dashboard design system & UI conventions
 
 `dashboard/DESIGN.md` is authoritative (Linear-style dark): #010102 canvas, four-step surface ladder + hairline borders (no drop shadows), lavender `#5e6ad2` as the ONLY accent (brand mark, primary CTA, focus ring), success green `#27a644` as the only semantic chromatic, Inter, 8px buttons / 12px cards / 16px panels, dark-only. Tokens live in `src/theme.ts` (Mantine) and `src/theme.css` (`--jp-*`). Don't reintroduce yellow/orange badges or shadows.
+
+UI conventions established in `JobList.tsx` — keep them when extending:
+
+- `useJobs` fetches a 500-row window; the UI paginates/sorts **client-side** over it. `FETCH_LIMIT` in `JobList.tsx` must stay in sync with the `.limit()` in `useJobs.ts`. Pagination *clamps* the page instead of resetting it so Realtime invalidations don't yank the user back to page 1.
+- Sorting sinks null/empty values to the bottom in both directions (unscored jobs never lead the list).
+- Search is debounced (250ms, `useDebouncedValue`) before it reaches `useJobs` — don't pass raw keystroke state into a query key.
+- Every list needs loading (skeletons on mobile, `fetching` on the table), empty, and error states; clickable mobile cards are `<Card component="button">` (keyboard accessible), never bare click-handler divs; placeholder-only inputs get `aria-label`s.
+- Mutations are optimistic (see `useUpdateJob`): patch every cached `['jobs']` query, roll back on error.
+
+Headless-preview quirks (test artifacts, NOT app bugs — don't chase them): Mantine Modal/Drawer transitions never mount because the backgrounded tab throttles `requestAnimationFrame` (screenshots may also time out), and `useMediaQuery` only flips after a reload when the viewport is emulated. Verify via DOM/computed-style inspection instead.
