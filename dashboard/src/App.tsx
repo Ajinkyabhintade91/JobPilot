@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { AppShell, Button, Container, Group, Stack, Text, Title } from '@mantine/core'
+import { useDebouncedValue } from '@mantine/hooks'
 import { Login } from './auth/Login'
 import { ProfileUpload } from './profile/ProfileUpload'
 import { JobFilters } from './jobs/JobFilters'
@@ -18,7 +19,9 @@ const DEFAULT_FILTERS: JobFilterState = {
 
 function Jobs() {
   const [filters, setFilters] = useState<JobFilterState>(DEFAULT_FILTERS)
-  const { data, isLoading, error } = useJobs(filters)
+  // debounce so typing in search doesn't fire a PostgREST query per keystroke
+  const [debouncedSearch] = useDebouncedValue(filters.search, 250)
+  const { data, isLoading, error } = useJobs({ ...filters, search: debouncedSearch })
   return (
     <Stack gap="md">
       <JobFilters filters={filters} onChange={setFilters} />

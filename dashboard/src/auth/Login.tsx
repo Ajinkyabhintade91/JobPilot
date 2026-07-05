@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Alert, Button, Card, Center, PasswordInput, Stack, TextInput, Title } from '@mantine/core'
+import { Alert, Button, Card, Center, Group, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core'
 import { supabase } from '../lib/supabase'
 
 export function Login() {
@@ -22,16 +22,36 @@ export function Login() {
       <Card withBorder w={380} p="lg">
         <form onSubmit={signIn}>
           <Stack>
-            <Title order={3}>JobPilot</Title>
+            <div>
+              <Group gap={10}>
+                {/* brand mark — matches the app header */}
+                <span
+                  aria-hidden
+                  style={{
+                    width: 14,
+                    height: 14,
+                    borderRadius: 4,
+                    background: 'var(--jp-primary)',
+                    display: 'inline-block',
+                  }}
+                />
+                <Title order={3}>JobPilot</Title>
+              </Group>
+              <Text size="sm" c="dimmed" mt={4}>
+                Your overnight job pipeline.
+              </Text>
+            </div>
             <TextInput
               label="Email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.currentTarget.value)}
               required
             />
             <PasswordInput
               label="Password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.currentTarget.value)}
               required

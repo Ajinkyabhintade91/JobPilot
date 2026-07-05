@@ -44,8 +44,9 @@ export function ProfileUpload() {
         : {
             ok: true,
             text:
-              'CV uploaded. Run profile extraction to (re)build your profile: ' +
-              'curl -X POST localhost:8080/tasks/extract-profile — then score-jobs.',
+              'CV uploaded and set as your active master CV. Tonight’s run rebuilds ' +
+              'your profile and rescores every job automatically. To rescore now, run: ' +
+              'curl -X POST localhost:8080/tasks/extract-profile, then …/tasks/score-jobs.',
           },
     )
   }

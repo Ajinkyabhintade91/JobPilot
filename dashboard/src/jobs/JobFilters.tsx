@@ -13,12 +13,15 @@ export function JobFilters({
   return (
     <Group gap="sm" wrap="wrap">
       <TextInput
+        type="search"
+        aria-label="Search job titles"
         placeholder="Search title…"
         value={filters.search}
         onChange={(e) => onChange({ ...filters, search: e.currentTarget.value })}
         w={{ base: '100%', sm: 220 }}
       />
       <MultiSelect
+        aria-label="Filter by status"
         placeholder="Status"
         data={JOB_STATUSES as unknown as string[]}
         value={filters.statuses}
@@ -27,6 +30,7 @@ export function JobFilters({
         w={{ base: '48%', sm: 200 }}
       />
       <MultiSelect
+        aria-label="Filter by source"
         placeholder="Source"
         data={SOURCES}
         value={filters.sources}
