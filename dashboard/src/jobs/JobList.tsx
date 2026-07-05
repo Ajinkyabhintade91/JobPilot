@@ -9,18 +9,41 @@ import { companyName, type Job } from '../lib/types'
 import { StatusSelect } from './StatusSelect'
 import { TagEditor } from './TagEditor'
 
+// DESIGN.md: success green is the only semantic chromatic — strong matches
+// get it; everything else walks the neutral surface ladder.
+const SCORE_STYLES = {
+  strong: { background: 'rgba(39, 166, 68, 0.15)', color: '#4cc764' },
+  mid: { background: 'var(--jp-surface-3)', color: 'var(--jp-ink-muted)' },
+  low: { background: 'transparent', color: 'var(--jp-ink-subtle)', border: '1px solid var(--jp-hairline)' },
+} as const
+
 function ScoreBadge({ score }: { score: number | null }) {
-  if (score === null) return <Text size="xs" c="dimmed">—</Text>
-  const color = score >= 70 ? 'green' : score >= 50 ? 'yellow' : 'gray'
-  return <Badge size="sm" color={color} variant="light">{score}</Badge>
+  if (score === null) return <Text size="xs" c="var(--jp-ink-tertiary)">—</Text>
+  const style = score >= 70 ? SCORE_STYLES.strong : score >= 50 ? SCORE_STYLES.mid : SCORE_STYLES.low
+  return (
+    <Badge size="sm" variant="transparent" style={{ ...style, fontVariantNumeric: 'tabular-nums' }}>
+      {score}
+    </Badge>
+  )
 }
+
+// Neutral status-pill treatment (surface lift, no hue) for source/meta chips
+const PILL = { background: 'var(--jp-surface-2)', color: 'var(--jp-ink-subtle)' } as const
 
 function SourceBadge({ job }: { job: Job }) {
   return (
     <Group gap={4}>
-      <Badge size="xs" variant="light">{job.source}</Badge>
-      {job.manual_apply_only && <Badge size="xs" color="orange">manual</Badge>}
-      {job.is_ghost_suspect && <Badge size="xs" color="gray">ghost?</Badge>}
+      <Badge size="xs" variant="transparent" style={PILL}>{job.source}</Badge>
+      {job.manual_apply_only && (
+        <Badge size="xs" variant="transparent" style={{ ...PILL, color: 'var(--jp-ink-muted)' }}>
+          manual
+        </Badge>
+      )}
+      {job.is_ghost_suspect && (
+        <Badge size="xs" variant="transparent" style={{ ...PILL, color: 'var(--jp-ink-tertiary)' }}>
+          ghost?
+        </Badge>
+      )}
     </Group>
   )
 }
@@ -82,7 +105,9 @@ export function JobList({ jobs, loading }: { jobs: Job[]; loading: boolean }) {
                   <ScoreBadge score={job.match_score} />
                   <SourceBadge job={job} />
                 </Group>
-                <Badge size="xs" variant="outline">{job.status}</Badge>
+                <Badge size="xs" variant="transparent" style={{ ...PILL, color: 'var(--jp-ink-muted)' }}>
+                  {job.status}
+                </Badge>
               </Group>
             </Card>
           ))}
@@ -94,7 +119,7 @@ export function JobList({ jobs, loading }: { jobs: Job[]; loading: boolean }) {
   }
 
   return (
-    <>
+    <div className="jp-panel">
       <DataTable
         records={jobs}
         fetching={loading}
@@ -102,6 +127,8 @@ export function JobList({ jobs, loading }: { jobs: Job[]; loading: boolean }) {
         highlightOnHover
         minHeight={300}
         noRecordsText="No jobs match."
+        backgroundColor="transparent"
+        rowBorderColor="var(--jp-hairline)"
         columns={[
           {
             accessor: 'title',
@@ -138,6 +165,6 @@ export function JobList({ jobs, loading }: { jobs: Job[]; loading: boolean }) {
         ]}
       />
       <JobDrawer job={selected} onClose={() => setSelected(null)} />
-    </>
+    </div>
   )
 }

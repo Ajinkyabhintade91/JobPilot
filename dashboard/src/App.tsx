@@ -45,13 +45,26 @@ export default function App() {
   if (!session) return <Login />
 
   return (
-    <AppShell header={{ height: 52 }} padding="md">
-      <AppShell.Header>
+    <AppShell header={{ height: 56 }} padding="md">
+      <AppShell.Header style={{ background: 'var(--jp-canvas)', borderColor: 'var(--jp-hairline)' }}>
         <Group h="100%" px="md" justify="space-between">
-          <Title order={4}>JobPilot</Title>
+          <Group gap={10}>
+            {/* brand mark — one of the few sanctioned lavender uses */}
+            <span
+              aria-hidden
+              style={{
+                width: 14,
+                height: 14,
+                borderRadius: 4,
+                background: 'var(--jp-primary)',
+                display: 'inline-block',
+              }}
+            />
+            <Title order={4}>JobPilot</Title>
+          </Group>
           <Group gap="xs">
             <ProfileUpload />
-            <Button size="xs" variant="subtle" onClick={() => supabase.auth.signOut()}>
+            <Button size="xs" variant="subtle" color="gray" onClick={() => supabase.auth.signOut()}>
               Sign out
             </Button>
           </Group>

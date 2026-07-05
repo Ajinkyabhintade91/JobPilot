@@ -52,7 +52,7 @@ export function ProfileUpload() {
 
   return (
     <>
-      <Button size="xs" variant="light" onClick={() => setOpen(true)}>
+      <Button size="xs" variant="default" onClick={() => setOpen(true)}>
         Upload CV
       </Button>
       <Modal opened={open} onClose={() => setOpen(false)} title="Master CV">
