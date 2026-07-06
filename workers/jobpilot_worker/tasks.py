@@ -7,6 +7,7 @@ from .runs import pipeline_run
 from .scoring import embed_jobs, score_jobs
 from .sources.ats import poll_ats
 from .sources.jobbank import poll_jobbank
+from .tailor import tailor_approved
 
 
 def smoke() -> dict:
@@ -30,3 +31,4 @@ TASKS["dedup"] = run_dedup
 TASKS["extract-profile"] = extract_profile
 TASKS["embed-jobs"] = embed_jobs
 TASKS["score-jobs"] = score_jobs
+TASKS["tailor-approved"] = tailor_approved

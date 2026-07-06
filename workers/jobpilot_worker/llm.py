@@ -18,15 +18,15 @@ def _post(path: str, payload: dict, timeout: float) -> dict:
 
 
 def chat(prompt: str, *, system: str = "", tier: str = "cheap",
-         timeout: float = 600.0) -> str:
-    """timeout is generous by default: the cheap tier is a 3B model on CPU."""
+         timeout: float = 600.0, max_tokens: int | None = None) -> str:
+    """timeout is generous by default: the cheap tier is a 3B model on CPU.
+    Set max_tokens on metered tiers — providers estimate cost from it."""
     messages = ([{"role": "system", "content": system}] if system else [])
     messages.append({"role": "user", "content": prompt})
-    data = _post(
-        "/v1/chat/completions",
-        {"model": tier, "messages": messages, "temperature": 0},
-        timeout,
-    )
+    payload: dict = {"model": tier, "messages": messages, "temperature": 0}
+    if max_tokens is not None:
+        payload["max_tokens"] = max_tokens
+    data = _post("/v1/chat/completions", payload, timeout)
     return data["choices"][0]["message"]["content"]
 
 

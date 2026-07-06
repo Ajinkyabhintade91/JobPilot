@@ -18,10 +18,15 @@ model_list:
       api_base: http://ollama:11434
 
   # ---- strong tier: CV tailoring, screening answers, outreach (Phase 3+) ----
+  # Routed through OpenRouter (one key, many models). Pinned to a specific
+  # model — tailoring quality must be consistent, never auto-routed.
+  # Account is free-tier for now; once credits are added, swap the model line
+  # for the commented one below (paid models 402 without credits).
   - model_name: strong
     litellm_params:
-      model: anthropic/claude-sonnet-5
-      api_key: os.environ/ANTHROPIC_API_KEY
+      model: openrouter/openai/gpt-oss-120b:free
+      # model: openrouter/anthropic/claude-sonnet-5
+      api_key: os.environ/OPENROUTER_API_KEY
 
 litellm_settings:
   success_callback: ["langfuse"]

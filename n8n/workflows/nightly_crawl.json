@@ -100,13 +100,25 @@
     },
     {
       "parameters": {
+        "method": "POST",
+        "url": "={{ $env.WORKER_URL }}/tasks/tailor-approved",
+        "options": { "timeout": 1800000 }
+      },
+      "name": "Tailor approved (non-fatal)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1800, 0],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
         "url": "={{ $env.HC_PING_URL }}",
         "options": { "timeout": 15000 }
       },
       "name": "HC success",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1800, 0],
+      "position": [2000, 0],
       "onError": "continueRegularOutput"
     },
     {
@@ -134,7 +146,8 @@
     "JobSpy (non-fatal)": { "main": [[{ "node": "Dedup", "type": "main", "index": 0 }]] },
     "Dedup": { "main": [[{ "node": "Embed jobs", "type": "main", "index": 0 }]] },
     "Embed jobs": { "main": [[{ "node": "Score jobs (non-fatal)", "type": "main", "index": 0 }]] },
-    "Score jobs (non-fatal)": { "main": [[{ "node": "HC success", "type": "main", "index": 0 }]] },
+    "Score jobs (non-fatal)": { "main": [[{ "node": "Tailor approved (non-fatal)", "type": "main", "index": 0 }]] },
+    "Tailor approved (non-fatal)": { "main": [[{ "node": "HC success", "type": "main", "index": 0 }]] },
     "HC success": { "main": [[{ "node": "Telegram digest", "type": "main", "index": 0 }]] }
   },
   "settings": { "executionOrder": "v1" }

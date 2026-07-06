@@ -6,51 +6,15 @@ import { useMediaQuery } from '@mantine/hooks'
 import { DataTable, type DataTableSortStatus } from 'mantine-datatable'
 import dayjs from 'dayjs'
 import { companyName, type Job } from '../lib/types'
+import { PILL } from '../lib/styles'
+import { ApplicationKit } from './ApplicationKit'
+import { ScoreBadge, SourceBadge } from './badges'
 import { StatusSelect } from './StatusSelect'
 import { TagEditor } from './TagEditor'
 
 const PAGE_SIZE = 25
 const MOBILE_BATCH = 30
 const FETCH_LIMIT = 500 // keep in sync with useJobs .limit()
-
-// DESIGN.md: success green is the only semantic chromatic — strong matches
-// get it; everything else walks the neutral surface ladder.
-const SCORE_STYLES = {
-  strong: { background: 'rgba(39, 166, 68, 0.15)', color: '#4cc764' },
-  mid: { background: 'var(--jp-surface-3)', color: 'var(--jp-ink-muted)' },
-  low: { background: 'transparent', color: 'var(--jp-ink-subtle)', border: '1px solid var(--jp-hairline)' },
-} as const
-
-function ScoreBadge({ score }: { score: number | null }) {
-  if (score === null) return <Text size="xs" c="var(--jp-ink-tertiary)">—</Text>
-  const style = score >= 70 ? SCORE_STYLES.strong : score >= 50 ? SCORE_STYLES.mid : SCORE_STYLES.low
-  return (
-    <Badge size="sm" variant="transparent" style={{ ...style, fontVariantNumeric: 'tabular-nums' }}>
-      {score}
-    </Badge>
-  )
-}
-
-// Neutral status-pill treatment (surface lift, no hue) for source/meta chips
-const PILL = { background: 'var(--jp-surface-2)', color: 'var(--jp-ink-subtle)' } as const
-
-function SourceBadge({ job }: { job: Job }) {
-  return (
-    <Group gap={4}>
-      <Badge size="xs" variant="transparent" style={PILL}>{job.source}</Badge>
-      {job.manual_apply_only && (
-        <Badge size="xs" variant="transparent" style={{ ...PILL, color: 'var(--jp-ink-muted)' }}>
-          manual
-        </Badge>
-      )}
-      {job.is_ghost_suspect && (
-        <Badge size="xs" variant="transparent" style={{ ...PILL, color: 'var(--jp-ink-tertiary)' }}>
-          ghost?
-        </Badge>
-      )}
-    </Group>
-  )
-}
 
 function ResultsSummary({ jobs }: { jobs: Job[] }) {
   const strong = jobs.filter((j) => (j.match_score ?? 0) >= 70).length
@@ -78,7 +42,7 @@ function EmptyState() {
   )
 }
 
-function JobDrawer({ job, onClose }: { job: Job | null; onClose: () => void }) {
+export function JobDrawer({ job, onClose }: { job: Job | null; onClose: () => void }) {
   return (
     <Drawer
       opened={job !== null}
@@ -107,6 +71,7 @@ function JobDrawer({ job, onClose }: { job: Job | null; onClose: () => void }) {
               Open posting ↗
             </Anchor>
           )}
+          <ApplicationKit job={job} />
           <ScrollArea.Autosize mah="50vh">
             <Text size="sm" style={{ whiteSpace: 'pre-wrap' }}>
               {job.description || 'No description captured.'}

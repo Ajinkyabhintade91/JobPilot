@@ -5,11 +5,21 @@ pipeline_runs row; N8N branches on its "status" field.
 """
 import httpx
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from . import db, notify
 from .config import settings
 
 app = FastAPI(title="jobpilot-worker")
+
+# the dashboard's "Generate now" button calls this API directly — that only
+# works in a browser running on this machine (the API stays loopback-bound)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 
 def _embedding_dim_check() -> dict:
