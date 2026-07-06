@@ -52,6 +52,8 @@ Data flow (nightly 01:00): poll-ats → jobbank → jobspy → dedup → embed-j
 
 n8n CLI gotcha: `n8n import:workflow` silently sets `active=false` (it already cost one missed nightly run). After ANY import: re-inject the workflow `id` + `settings.errorWorkflow` before importing, then `n8n update:workflow --id=... --active=true`, restart the container, and verify with `n8n export:workflow --all`.
 
+Two more n8n 2.x traps (each cost a nightly run): expressions get "access to env vars denied" unless `N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"` is set in compose (the workflows depend on `{{$env.WORKER_URL}}`), and the error workflow itself must be `active=true` or failures are completely silent — no Telegram, no HC /fail. `n8n execute --id=...` CLI can't run while the server is up (task-broker port 5679 conflict); to smoke-test expression evaluation, use the deactivated `env_test` webhook workflow in the n8n DB (activate + restart, `curl localhost:5678/webhook/env-test` → worker health JSON, deactivate).
+
 ### Invariants that are easy to break
 
 - **`pipeline_run()` contextmanager** (`runs.py`): `run.result` exists only AFTER the `with` block exits. Never `return run.result` inside the block (this was a real bug — see `test_tasks.py`). Set `run.stats` / call `run.add_error()` inside; return after.

@@ -83,6 +83,9 @@ services:
       GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-America/Toronto}
       TZ: ${GENERIC_TIMEZONE:-America/Toronto}
       N8N_DIAGNOSTICS_ENABLED: "false"
+      # n8n 2.x denies $env in expressions by default ("access to env vars
+      # denied" killed the 2026-07-06 nightly) — the workflows need it
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
       # consumed by workflows via {{ $env.* }}
       HC_PING_URL: ${HC_PING_URL:-}
       WORKER_URL: http://worker:8080
