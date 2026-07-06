@@ -61,6 +61,11 @@ a:focus-visible {
   overflow: hidden;
 }
 
+/* content panels get the 16px inset; the bare class stays flush for tables */
+.jp-panel--pad {
+  padding: 16px;
+}
+
 /* Dropdown menus sit on surface-3 (elevation level 3) */
 .mantine-Popover-dropdown,
 .mantine-Combobox-dropdown {
